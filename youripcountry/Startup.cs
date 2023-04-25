@@ -37,6 +37,20 @@ namespace youripcountry
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "youripcountry", Version = "v1" });
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "CorsPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200", "https://www.demo.lucky2d.com", "https://www.lucky2d.com", "https://demo.lucky2d.com", "https://lucky2d.com")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials()
+                                .SetIsOriginAllowed((host) => true);
+                    });
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,10 +63,12 @@ namespace youripcountry
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "youripcountry v1"));
             }
 
-            app.UseCors(x => x
+            app.UseCors("CorsPolicy");
+
+          /*  app.UseCors(x => x
                .AllowAnyOrigin()
                .AllowAnyMethod()
-               .AllowAnyHeader());
+               .AllowAnyHeader());*/
 
             app.UseHttpsRedirection();
 
